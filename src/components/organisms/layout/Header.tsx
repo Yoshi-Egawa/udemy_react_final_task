@@ -12,7 +12,7 @@ export const Header: VFC = memo(() => {
 
   const onClickHome = useCallback(() => history.push("/home"), [history]);
   const onClickUserManagement = useCallback(
-    () => history.push("/userManagment"),
+    () => history.push("/home/userManagement"),
     [history]
   );
   const onClickSetting = useCallback(() => history.push("/home/setting"), [
@@ -57,7 +57,7 @@ export const Header: VFC = memo(() => {
         onClose={onClose}
         isOpen={isOpen}
         onClickHome={onClickHome}
-        onClickUserManagement={onClose}
+        onClickUserManagement={onClickUserManagement}
         onClickSetting={onClickSetting}
       />
     </>
