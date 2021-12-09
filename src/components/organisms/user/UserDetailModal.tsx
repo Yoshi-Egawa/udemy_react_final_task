@@ -1,28 +1,53 @@
-import { VFC, memo } from "react";
+import { VFC, memo, useState, useEffect, ChangeEvent } from "react";
 import {
-  Box,
   FormControl,
   FormLabel,
-  Image,
   Input,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack
 } from "@chakra-ui/react";
+
 import { User } from "../../../types/api/user";
+import { PrimaryButton } from "../../atoms/button/PrimaryButton";
 
 type Props = {
   user: User | null;
   isOpen: boolean;
+  isAdmin?: boolean;
   onClose: () => void;
 };
 
 export const UserDetailModal: VFC<Props> = memo((props) => {
-  const { user, isOpen, onClose } = props;
+  const { user, isOpen, isAdmin = false, onClose } = props;
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    setUsername(user?.username ?? "");
+    setName(user?.name ?? "");
+    setEmail(user?.email ?? "");
+    setPhone(user?.phone ?? "");
+  }, [user]);
+
+  const onChangeUsername = (e: ChangeEvent<HTMLInputElement>) =>
+    setUsername(e.target.value);
+  const onChangeName = (e: ChangeEvent<HTMLInputElement>) =>
+    setName(e.target.value);
+  const onChangeEmail = (e: ChangeEvent<HTMLInputElement>) =>
+    setEmail(e.target.value);
+  const onChangePhone = (e: ChangeEvent<HTMLInputElement>) =>
+    setPhone(e.target.value);
+
+  const onClickUpdate = () => alert("update");
+
   return (
     <Modal
       isOpen={isOpen}
@@ -31,23 +56,44 @@ export const UserDetailModal: VFC<Props> = memo((props) => {
       motionPreset="slideInRight"
     >
       <ModalOverlay />
-      <ModalContent pb={6}>
+      <ModalContent pb={2}>
         <ModalHeader>ユーザー詳細</ModalHeader>
         <ModalCloseButton />
         <ModalBody mx={4}>
           <Stack spacing={4}>
             <FormControl>
               <FormLabel>名前</FormLabel>
-              <Input value={user?.username} isReadonly />
+              <Input
+                value={username}
+                onChange={onChangeUsername}
+                isReadonly={!isAdmin}
+              />
               <FormLabel>フルネーム</FormLabel>
-              <Input value={user?.name} isReadonly />
+              <Input
+                value={name}
+                onChange={onChangeName}
+                isReadonly={!isAdmin}
+              />
               <FormLabel>Mail</FormLabel>
-              <Input value={user?.email} isReadonly />
+              <Input
+                value={email}
+                onChange={onChangeEmail}
+                isReadonly={!isAdmin}
+              />
               <FormLabel>TEL</FormLabel>
-              <Input value={user?.phone} isReadonly />
+              <Input
+                value={phone}
+                onChange={onChangePhone}
+                isReadonly={!isAdmin}
+              />
             </FormControl>
           </Stack>
         </ModalBody>
+        {isAdmin && (
+          <ModalFooter>
+            <PrimaryButton onClick={onClickUpdate}>更新</PrimaryButton>
+          </ModalFooter>
+        )}
       </ModalContent>
     </Modal>
   );
